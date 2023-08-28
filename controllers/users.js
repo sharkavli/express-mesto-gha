@@ -3,7 +3,7 @@ const User = require("../models/user");
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => {
-      res.status(201).send({ data: users });
+      res.status(200).send({ data: users });
     })
     .catch((err) => {
       return res.status(500).send({ message: `Server Error. ${err.message}` });
@@ -17,7 +17,7 @@ module.exports.getUser = (req, res) => {
       if (user === null) {
         return res.status(404).send({ message: `User not found.` });
       }
-      res.status(201).send({ data: user });
+      res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === "CastError") {
@@ -43,10 +43,10 @@ module.exports.updateProfile = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user.id,
-    { name: name, about: about },
-    { new: true, runValidators: true }
+    { name, about },
+    { runValidators: true, new: true }
   )
-    .then((user) => res.status(201).send(`Updated: ${user}`))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === "ValidationError") {
         return res.status(400).send({ message: `Invalid Data` });
