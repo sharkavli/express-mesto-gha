@@ -3,21 +3,21 @@ const Card = require("../models/card");
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.status(200).send({ data: cards }))
-    .catch((err) => {
-      return res.status(500).send({ message: `Server Error. ${err.message}` });
-    });
+    .catch((err) =>
+      res.status(500).send({ message: `Server Error. ${err.message}` })
+    );
 };
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
   const owner = req.user.id;
   Card.create({ name, link, owner })
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(201).send({ data: card }))
     .catch((err) => {
       if (err.name === "ValidationError") {
         return res.status(400).send({ message: `Invalid Data` });
       }
-      res.status(500).send({ message: `Server Error` });
+      return res.status(500).send({ message: `Server Error` });
     });
 };
 
@@ -28,7 +28,7 @@ module.exports.deleteCard = (req, res) => {
       if (card === null) {
         return res.status(404).send({ message: `Card Id not found.` });
       }
-      res.status(200).send(card);
+      return res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === "CastError") {
@@ -48,7 +48,7 @@ module.exports.likeCard = (req, res) =>
       if (card === null) {
         return res.status(404).send({ message: `Card Id not found.` });
       }
-      res.status(200).send(card);
+      return res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === "CastError") {
@@ -67,7 +67,7 @@ module.exports.dislikeCard = (req, res) =>
       if (card === null) {
         return res.status(404).send({ message: `Card Id not found.` });
       }
-      res.status(200).send(card);
+      return res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === "CastError") {

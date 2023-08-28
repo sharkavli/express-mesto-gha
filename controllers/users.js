@@ -5,9 +5,9 @@ module.exports.getUsers = (req, res) => {
     .then((users) => {
       res.status(200).send({ data: users });
     })
-    .catch((err) => {
-      return res.status(500).send({ message: `Server Error. ${err.message}` });
-    });
+    .catch((err) =>
+      res.status(500).send({ message: `Server Error. ${err.message}` })
+    );
 };
 
 module.exports.getUser = (req, res) => {
@@ -17,7 +17,7 @@ module.exports.getUser = (req, res) => {
       if (user === null) {
         return res.status(404).send({ message: `User not found.` });
       }
-      res.status(200).send({ data: user });
+      return res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === "CastError") {
@@ -30,12 +30,12 @@ module.exports.getUser = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(201).send({ data: user }))
     .catch((err) => {
       if (err.name === "ValidationError") {
         return res.status(400).send({ message: `Invalid Data` });
       }
-      res.status(500).send({ message: `Server Error` });
+      return res.status(500).send({ message: `Server Error` });
     });
 };
 
@@ -51,7 +51,7 @@ module.exports.updateProfile = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(400).send({ message: `Invalid Data` });
       }
-      res.status(500).send({ message: `Server Error` });
+      return res.status(500).send({ message: `Server Error` });
     });
 };
 
@@ -65,6 +65,6 @@ module.exports.updateAvatar = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(400).send({ message: `Invalid Data` });
       }
-      res.status(500).send({ message: `Server Error` });
+      return res.status(500).send({ message: `Server Error` });
     });
 };
