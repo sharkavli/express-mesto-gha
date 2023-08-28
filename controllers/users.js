@@ -44,7 +44,7 @@ module.exports.updateProfile = (req, res) => {
   User.findByIdAndUpdate(
     req.user.id,
     { name: name, about: about },
-    { new: true }
+    { new: true, runValidators: true }
   )
     .then((user) => res.status(201).send(`Updated: ${user}`))
     .catch((err) => {
