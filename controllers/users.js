@@ -56,8 +56,8 @@ module.exports.updateProfile = (req, res) => {
 };
 
 module.exports.updateAvatar = (req, res) => {
-  const { link } = req.body;
-  User.findByIdAndUpdate(req.user.id, { avatar: link }, { new: true })
+  const { avatar } = req.body;
+  User.findByIdAndUpdate(req.user.id, { avatar }, { new: true })
     .then((user) => {
       res.status(200).send(user.avatar);
     })
