@@ -1,6 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
 const router = require("./routes/index");
+const { login, createUser } = require("./controllers/users");
+const auth = require("./middlewares/auth");
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -9,15 +12,20 @@ app.use(express.json());
 
 mongoose.connect("mongodb://localhost:27017/mestodb");
 
-app.use((req, res, next) => {
-  req.user = {
-    id: "64e8bbde25e765dc8037c6f5",
-  };
-
-  next();
-});
-
+app.use(cookieParser());
+app.post("/signin", login);
+app.post("/signup", createUser);
+app.use(auth);
 app.use(router);
+
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+
+  res.status(statusCode).send({
+    message: statusCode === 500 ? "На сервере произошла ошибка" : message,
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Сервер запущен на: http://localhost:${PORT}`);

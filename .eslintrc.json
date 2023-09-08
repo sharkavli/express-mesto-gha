@@ -12,6 +12,9 @@
       "no-underscore-dangle": ["error", { "allow": ["_id", ""]}],
       "import/no-useless-path-segments": ["error", {
         "noUselessIndex": true
-      }]
+      }],
+      "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+      "arrow-body-style": ["error", "always"],
+      "consistent-return": ["error", { "treatUndefinedAsUnspecified": true }]
     }
 }
