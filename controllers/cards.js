@@ -1,16 +1,14 @@
 const Card = require("../models/card");
 const NotFound = require("../errors/NotFound");
-const Unauthorized = require("../errors/Unauthorized");
 const InvalidReq = require("../errors/InvalidReq");
+const NoRights = require("../errors/NoRights");
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => {
       return res.status(200).send({ data: cards });
     })
-    .catch((err) => {
-      return res.status(500).send({ message: `Server Error. ${err.message}` });
-    });
+    .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
@@ -23,7 +21,7 @@ module.exports.createCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === "ValidationError") {
         // return res.status(400).send({ message: `Invalid Data` });
-        throw new NotFound(`Неверные данные`);
+        throw new InvalidReq(`Неверные данные`);
       }
     })
     .catch(next);
@@ -39,10 +37,10 @@ module.exports.deleteCard = (req, res, next) => {
       }
       if (card.owner.toString() !== req.user._id) {
         // res.status(401).send({ message: `You can only delete your own card` });
-        throw new Unauthorized(`Вы можете удалять только свои карточки`);
+        throw new NoRights(`Вы можете удалять только свои карточки`);
       } else {
         Card.findByIdAndDelete(req.params.cardId).then(() => {
-          return res.status(201).send({ message: `deleted card ${card}` });
+          return res.status(200).send({ message: `deleted card ${card}` });
         });
       }
     })

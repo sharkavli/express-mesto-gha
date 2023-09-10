@@ -27,6 +27,7 @@ module.exports.getUser = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
+  console.log(`ive called`);
   const { name, about, avatar, email, password } = req.body;
   bcrypt
     .hash(password, 10)
@@ -43,6 +44,7 @@ module.exports.createUser = (req, res, next) => {
       if (err.code === 11000) {
         throw new RepitedData(`Данный E-mail ${email} уже есть в БД`);
       }
+      next(err);
     })
     .catch(next);
 };
@@ -62,6 +64,7 @@ module.exports.updateProfile = (req, res, next) => {
       if (err.name === "ValidationError") {
         throw new InvalidReq(`Введены неверные данные`);
       }
+      next(err);
     })
     .catch(next);
 };
@@ -80,6 +83,7 @@ module.exports.updateAvatar = (req, res, next) => {
       if (err.name === "ValidationError") {
         throw new InvalidReq(`Введены неверные данные`);
       }
+      next(err);
     })
     .catch(next);
 };
