@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const router = require("./routes/index");
-
+const { errors } = require("celebrate");
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -14,6 +14,8 @@ mongoose.connect("mongodb://localhost:27017/mestodb");
 app.use(cookieParser());
 
 app.use(router);
+
+app.use(errors());
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {

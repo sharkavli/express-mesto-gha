@@ -27,7 +27,6 @@ module.exports.getUser = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  console.log(`ive called`);
   const { name, about, avatar, email, password } = req.body;
   bcrypt
     .hash(password, 10)
@@ -35,7 +34,9 @@ module.exports.createUser = (req, res, next) => {
       return User.create({ name, about, avatar, email, password: hash });
     })
     .then((user) => {
-      res.status(201).send({ data: user });
+      res.status(201).send({
+        data: `Создан пользователь c ID ${user._id}, именем ${user.name} и email ${user.email}`,
+      });
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
